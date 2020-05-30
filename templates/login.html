@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Library</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+    {% load static %}
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body class="bg">
+    <div class="container" style="background-color: rgba(179, 214, 255, 0.8);">
+        <div class="mt-5 pb-2">
+            <h1 class="display-4"><div class="text-center animated fadeIn" id="wHead">Welcome</div></h1>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-centered border mb-5" id="loginForm">
+                <div class="mt-2">
+                    <h3 class="display-4"><div class="text-center" id="lHead" style="font-family: 'Bitter', serif;">Login</div></h3>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group mt-3">
+                        <div class="text-center mb-2">Enter Register Number</div>
+                        <input type="text" class="form-control col-centered" name="regNo" placeholder="Register Number" aria-label="Register Number">
+                    </div>
+                    <div class="form-group">
+                        <div class="text-center mb-2">Password</div>
+                        <input type="password" class="form-control col-centered" name="password" placeholder="Password" aria-label="Password">
+                    </div>
+                    <div class="form-check mb-2">
+                        <label class="form-check-label">
+                        <input type="checkbox" id="rememberMe" class="form-check-input" value=""><label for="rememberMe">Remember Me</label>
+                        </label>
+                        <span class="float-right"><a href="{% url 'password_reset' %}">Forgot Password</a></span>
+                    </div>
+                    <div class="text-center my-3">
+                        <input class="btn btn-primary" type="submit" value="Log In">
+                    </div>
+                    <div class="text-center pb-3">
+                        Or create an account, <a href="{% url 'register' %}">Register</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>

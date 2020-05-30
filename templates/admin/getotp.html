@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Library</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif&display=swap" rel="stylesheet">
+    {% load static %}
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">    
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <a class="navbar-brand" href="{% url 'admin:index' %}"><span class="ml-3">Admin</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item ml-auto" >
+                <a class="nav-link navLink" href="{% url 'logout' %}"><span>Logout</span></a>
+              </li>
+          </ul>
+        </div>
+      </nav>
+    <div class="container mt-5 py-3" id="otpContainer"><div class="text-center mb-3"> <span id="otpHead" style="font-family: 'PT Serif', serif; font-size: 40px;">Enter the register number</span></div>
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message" class="container">
+                    <div class="alert alert-{{ message.tags }} alert-dismissible text-center" role="alert">
+                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+                        <strong>
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                            Error: 
+                        {% else %}
+                            {{ message.tags|title }}
+                        {% endif %}
+                        </strong>
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="col-md-6 offset-md-3">
+            <form action="{% url 'getOTP' %}" method="GET">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="reg-no-search" class="col-sm-4 col-form-label font-weight-bold">Register Number : </label>
+                    <div class="col-sm-8">
+                    <input type="text" class="form-control" id="reg-no-search" name="regNoSearch" placeholder="Register Number">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-8 offset-sm-4 text-center">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </form>
+            {% if otP %}
+            <div class="jumbotron jumbotron-fluid mb-3">
+                <div class="container text-center">
+                    <h3>{{ regNo }}</h3>
+                    <hr>
+                        <p class="lead font-weight-bold display-4">
+                                {{ otP.otp }}     
+                        </p>
+
+                </div>
+            </div>
+            {% endif %}
+            
+        </div>
+    </div>
+    
+</body>
+</html>

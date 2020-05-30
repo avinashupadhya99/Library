@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Library</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% load static %}
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"> 
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <a class="navbar-brand" href="{% url 'dashboard' %}"><span id="usrName" class="ml-3">{{ FirstName }}</span></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item ml-auto" >
+          <a class="nav-link navLink" href="{% url 'index' %}">Search</a>
+        </li>
+        <li class="nav-item ml-auto" >
+          <a class="nav-link navLink" href="#">Scan Book</a>
+        </li>
+        <li class="nav-item ml-auto" >
+          <a class="nav-link navLink" id="bellBtn" href="#"><ion-icon class="icon" name="notifications"></ion-icon></a>
+        </li>
+        <li class="nav-item ml-auto" >
+            <a class="nav-link navLink" href="{% url 'logout' %}"><span>Logout</span><i class="fa fa-sign-out ml-1" style="font-size: 20px;"></i></a>
+          </li>
+      </ul>
+    </div>
+  </nav>
+  <!--Notifications-->
+    <div class="cModal" id="notification-modal">
+        <div class="cModal-content border border-secondary rounded" id="content-modal">
+          <div class="row border pr-2 py-3">
+            <div class="col-2 pl-2"><img src="images/return.jfif" alt="return-icon" style="max-height:100%; max-width: 100%;" /></div>
+              <div class="col-10 pl-0 text-justify"><span class="font-weight-bold">Basic Mechanical Engineering</span> by <span class="auth-notif">Dr. Sadhu Singh</span> is due for return on <span class="font-weight-bold">30 January 2020</span></div>
+          </div>
+          <div class="row border pr-2 py-3">
+            <div class="col-2 pl-2"><img src="images/return.jfif" alt="return-icon" style="max-height:100%; max-width: 100%;" /></div>
+              <div class="col-10 pl-0 text-justify"><span class="font-weight-bold">Introduction to Software Engineering</span> by <span class="auth-notif">Ronald J. Leach</span> is due for return on <span class="font-weight-bold">30 January 2020</span></div>
+          </div>
+          <div class="row border pr-2 py-3">
+            <div class="col-2 pl-2"><img src="images/return.jfif" alt="return-icon" style="max-height:100%; max-width: 100%;" /></div>
+              <div class="col-10 pl-0 text-justify"><span class="font-weight-bold">Industrial Engineering</span> by <span class="auth-notif">M.I.Khan</span> is due for return on <span class="font-weight-bold">30 January 2020</span></div>
+          </div>
+          <div class="row border pr-2 py-3">
+            <div class="col-2 pl-2"><img src="images/return.jfif" alt="return-icon" style="max-height:100%; max-width: 100%;" /></div>
+              <div class="col-10 pl-0 text-justify"><span class="font-weight-bold">Principles of Electrical Engineering</span> by <span class="auth-notif">V.K.Mehta</span> is due for return on <span class="font-weight-bold">30 January 2020</span></div>
+          </div>
+        </div>
+    </div>
+    <!--End of notifications-->
+
+    <div class="container my-4">
+        <h2>Welcome, <span class="text-uppercase">{{ FirstName }}</span></h2>
+        
+        <hr>
+        {% if messages %}
+          {% for message in messages %}
+            <div id="message" class="container">
+              <div class="alert alert-{{ message.tags }} alert-dismissible text-center" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+                <strong>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                    Error: 
+                {% else %}
+                    {{ message.tags|title }}
+                {% endif %}
+                </strong>
+                {{ message }}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+        <div class="row">
+            <!--Start of vertical nav-->
+            <div class="col-md-3 side-nav">
+              <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-borrowal" role="tab" aria-controls="v-pills-borrowal" aria-selected="true">My Borrowals</a>
+                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
+                <a class="nav-link" id="v-pills-password-tab" data-toggle="pill" href="#v-pills-password" role="tab" aria-controls="v-pills-password" aria-selected="false">Edit Password</a>
+              </div>
+            </div>
+            <!--End of vertical nav-->
+            <!--Start of vertical nav contents-->
+            <div class="col-md-9">
+              <div class="tab-content" id="v-pills-tabContent">
+                <!--Start of My Borrowals tab content-->
+                <div class="tab-pane fade show active" id="v-pills-borrowal" role="tabpanel" aria-labelledby="v-pills-borrowal-tab">
+                    <!--Start of Horizontal nav in My Borrowals-->
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                          <a class="nav-item nav-link active" id="nav-borrowal-tab" data-toggle="tab" href="#nav-borrowal" role="tab" aria-controls="nav-borrowal" aria-selected="true">Current Borrowals</a>
+                          <a class="nav-item nav-link" id="nav-old-borrowal-tab" data-toggle="tab" href="#nav-old-borrowal" role="tab" aria-controls="nav-old-borrowal" aria-selected="false">Borrow Again</a>
+                        </div>
+                    </nav>
+                    <!--End of  Horizontal nav in My Borrowals-->
+                    
+                      <div class="tab-content" id="nav-tabContent">
+                        <!--Start of Current Borrowals tab content-->
+                        <div class="tab-pane fade show active" id="nav-borrowal" role="tabpanel" aria-labelledby="nav-borrowal-tab">
+                            <div class="card my-3">
+                                <div class="card-header">
+                                  <div class="row">
+                                      <div class="col-md-3">
+                                        <ul class="flex-column list-unstyled">
+                                            <li>
+                                                BORROWED ON
+                                            </li>
+                                            <li>
+                                                16 JANUARY 2020
+                                            </li>
+                                        </ul>  
+                                      </div>
+                                      <div class="col-md-3 offset-md-6">
+                                        <ul class="flex-column list-unstyled">
+                                            <li>
+                                                RETURN BY
+                                            </li>
+                                            <li>
+                                                31 JANUARY 2020
+                                            </li>
+                                        </ul>  
+                                      </div>
+                                  </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img class="align-self-center mr-3" src="images/mech.jfif" alt="Image of Book">
+                                        <div class="media-body">
+                                          <h2 class="mt-0 font-weight-bold" style="font-family: 'Merriweather', serif;">Basic Mechanical Engineering</h2>
+                                          <h5 style="font-family: 'Nanum Gothic', sans-serif;">Dr. Sadhu Singh</h5>
+                                          <h5 class="my-3">UV1011235</h5>
+                                          <h6>S. Chand Publications</h6>
+                                          <h6>Revised Edition</h6>
+                                          <span class="font-weight-bold">Fine: &#8377; 0.00</span>
+                                        </div>
+                                      </div>
+                                </div>
+                              </div>
+                        </div>
+                        <!--End of Current Borrowals tab content-->
+                        <!--Start of Old Borrowals tab content-->
+                        <div class="tab-pane fade" id="nav-old-borrowal" role="tabpanel" aria-labelledby="nav-old-borrowal-tab">
+                            <div class="card my-3">
+                                <div class="card-header">
+                                  <div class="row">
+                                      <div class="col-md-3">
+                                        <ul class="flex-column list-unstyled">
+                                            <li>
+                                                BORROWED ON
+                                            </li>
+                                            <li>
+                                                16 JANUARY 2020
+                                            </li>
+                                        </ul>  
+                                      </div>
+                                      <div class="col-md-3 offset-md-6">
+                                        <ul class="flex-column list-unstyled">
+                                            <li>
+                                                RETURNED ON
+                                            </li>
+                                            <li>
+                                                31 JANUARY 2020
+                                            </li>
+                                        </ul>  
+                                      </div>
+                                  </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img class="align-self-center mr-3" src="images/mech.jfif" alt="Image of Book">
+                                        <div class="media-body">
+                                          <h2 class="mt-0 font-weight-bold" style="font-family: 'Merriweather', serif;">Basic Mechanical Engineering</h2>
+                                          <h5 style="font-family: 'Nanum Gothic', sans-serif;">Dr. Sadhu Singh</h5>
+                                          <h5 class="my-3">UV1011235</h5>
+                                          <h6>S. Chand Publications</h6>
+                                          <h6>Revised Edition</h6>
+                                          <span class="font-weight-bold">Fine Paid: &#8377; 0.00</span>
+                                        </div>
+                                      </div>
+                                </div>
+                              </div>
+                        </div>
+                        <!--End of Old Borrowals tab content-->
+                      </div>
+                </div>
+                <!--End of My Borrowals tab content-->
+                
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                  <h2 class="text-primary mt-2">Profile Details</h2>
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-5 col-sm-5 col-md-3">
+                      <span class="font-weight-bold">Name</span>
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-1">
+                      <span class="font-weight-bold">:</span>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-8">
+                      {{ FirstName }}
+                    </div>
+                  </div>
+                  <div class="row mt-4">
+                    <div class="col-5 col-sm-5 col-md-3">
+                      <span class="font-weight-bold">Register Number</span>
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-1">
+                      <span class="font-weight-bold">:</span>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-8">
+                      {{ UserName }}
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-5 col-sm-5 col-md-3">
+                      <span class="font-weight-bold">E-Mail (<span id="emailVerif">Verified</span>)</span>
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-1">
+                      <span class="font-weight-bold">:</span>
+                    </div>
+                    <div class="col-5 col-sm-5 col-md-6">
+                      {{ EmailID }}
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-2 ml-auto">
+                      <a href="#" data-toggle="modal" data-target="#editEmail"><i class="fa fa-edit"></i>Edit</a>
+                    </div>
+                    <!--Start of Modal form-->
+                    <div class="modal fade" id="editEmail" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="editEmailLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="editEmailLabel">Edit Email Address</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="{% url 'edit_email' %}" method="POST">
+                              {% csrf_token %}
+                              <div class="form-group row">
+                                <label for="current-password" class="col-sm-4 col-form-label font-weight-bold">New Email:</label>
+                                <div class="col-sm-8">
+                                  <input type="email" class="form-control" id="new-email-id" name="newemail" required>
+                                </div>
+                              </div>
+                              <input type="submit" class="btn btn-primary" value="Save Changes" id="saveEmail">
+                            </form>
+                          </div>
+                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                    <!--End of Modal Form-->
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-5 col-sm-5 col-md-3">
+                      <span class="font-weight-bold">Phone Number (<span id="phVerif">Verified</span>)</span>
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-1">
+                      <span class="font-weight-bold">:</span>
+                    </div>
+                    <div class="col-5 col-sm-5 col-md-6">
+                      +91 {{ PhoneNo }}
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-2 ml-auto">
+                      <a href="#" data-toggle="modal" data-target="#editNumber"><i class="fa fa-edit"></i>Edit</a>
+                    </div>
+                    <!--Start of Modal Form-->
+                    <div class="modal fade" id="editNumber" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="editNumberLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="editNumberLabel">Edit Phone Number</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="{% url 'edit_phone' %}" method="POST">
+                              {% csrf_token %}
+                              <div class="form-group row">
+                                <label for="current-password" class="col-sm-4 col-form-label font-weight-bold">New Phone Number:</label>
+                                <div class="col-sm-8">
+                                  <input type="tel" class="form-control" id="new-phone-no" name="newphone" pattern="[0-9]{10}" required>
+                                </div>
+                              </div>
+                              <input type="submit" class="btn btn-primary" value="Save Changes" id="saveNumber">
+                            </form>
+                          </div>
+                          <button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                    <!--End of Modal Form-->
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-5 col-sm-5 col-md-3">
+                      <span class="font-weight-bold">Semester</span>
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-1">
+                      <span class="font-weight-bold">:</span>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-8">
+                      {% if Semester == 1 %}
+                        {{Semester}}st
+                      {% elif Semester == 2 %}
+                        {{Semester}}nd
+                      {% elif Semester == 3 %}
+                        {{Semester}}rd
+                      {% else %}
+                        {{Semester}}th
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-5 col-sm-5 col-md-3">
+                      <span class="font-weight-bold">Branch</span>
+                    </div>
+                    <div class="col-1 col-sm-1 col-md-1">
+                      <span class="font-weight-bold">:</span>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-8">
+                      {{ Branch }}
+                    </div>
+                  </div>
+                </div>
+                <!--Start of change password form-->
+                <div class="tab-pane fade" id="v-pills-password" role="tabpanel" aria-labelledby="v-pills-password-tab">
+                    <div class="row">
+                        <div class="col-md-6 offset-md-1">
+                            <h2 class="text-primary mt-3">Change Password</h2>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8 border border-dark offset-md-1 rounded">
+                            <p class="mt-3">Use the form below to change the password for your account</p>
+                            <form action="{% url 'change_password' %}" method="POST" >
+                              {% csrf_token %}
+                                <div class="form-group row">
+                                  <label for="current-password" class="col-sm-4 col-form-label font-weight-bold">Current Password:</label>
+                                  <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="current-password" name="currentPassword">
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label for="new-password" class="col-sm-4 col-form-label font-weight-bold">New Password:</label>
+                                  <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="new-password" name="newPassword">
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="new-password-1" class="col-sm-4 col-form-label font-weight-bold">Re-enter New Password:</label>
+                                    <div class="col-sm-8">
+                                      <input type="password" class="form-control" id="new-password-1" name="newPassword1">
+                                    </div>
+                                  </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-8 offset-sm-4">
+                                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--End of change password form-->
+              </div>
+            </div>
+            <!--End of vertical nav contents-->
+          </div>
+    </div>
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="  crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script>
+     $(document).ready(function(){
+  $("#saveEmail").click(function(){
+    $('.toastMsg').html("An email is sent for verification.");
+    $('.toast').toast('show');
+  });
+});
+$(document).ready(function(){
+  $("#saveNumber").click(function(){
+    $('.toastMsg').html("A message is sent for verification.");
+    $('.toast').toast('show');
+  });
+});
+  </script>
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
